@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: SPH
+Version: 0.1.1
+Summary: Python interface for SPH file of Sphere framework
+Home-page: UNKNOWN
+Author: YOSHIKAWA Hiroyuki, FUJITSU SYSTEMS EAST LTD.
+Author-email: yoh@jp.fujitsu.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires: numpy
