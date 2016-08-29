@@ -209,20 +209,27 @@ class SPH:
 
         # data record
         dimSz = self._dims[0] * self._dims[1] * self._dims[2]
+        dimVX = self._veclen * self._dims[0]
         k = 0
         if self._dtype == SPH.DT_DOUBLE:
+            dfmt = '%dd' % dimVX
             ofp.write(struct.pack('i', dimSz*self._veclen*8))
-            for i in range(dimSz):
-                for j in range(self._veclen):
-                    ofp.write(struct.pack('d', self._data[k]))
-                    k = k + 1
+            for i in range(self._dims[2]):
+                for j in range(self._dims[1]):
+                    ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
+                    k = k + dimVX
+                    continue # end of for(j)
+                continue # end of for(i)
             ofp.write(struct.pack('i', dimSz*self._veclen*8))
         else:
+            dfmt = '%df' % dimVX
             ofp.write(struct.pack('i', dimSz*self._veclen*4))
-            for i in range(dimSz):
-                for j in range(self._veclen):
-                    ofp.write(struct.pack('f', self._data[k]))
-                    k = k + 1
+            for i in range(self._dims[2]):
+                for j in range(self._dims[1]):
+                    ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
+                    k = k + dimVX
+                    continue # end of for(j)
+                continue # end of for(i)
             ofp.write(struct.pack('i', dimSz*self._veclen*4))
 
         ofp.close()
