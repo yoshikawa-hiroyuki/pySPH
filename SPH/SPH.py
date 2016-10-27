@@ -118,22 +118,22 @@ class SPH:
             if ( dType == 1 ):
                 packStr = 'f'
                 dlen = 4
-                self._data = numpy.array(0, dtype=float)
+                self._data = numpy.array(0, dtype=numpy.float32)
             else:
                 packStr = 'd'
                 dlen = 8
-                self._data = numpy.array(0, dtype=double)
+                self._data = numpy.array(0, dtype=numpy.float64)
         else:
             self._min = [0.0, 0.0, 0.0]
             self._max = [0.0, 0.0, 0.0]
             if ( dType == 1 ):
                 packStr = 'fff'
                 dlen = 12
-                self._data = numpy.array(0, dtype=float)
+                self._data = numpy.array(0, dtype=numpy.float32)
             else:
                 packStr = 'ddd'
                 dlen = 24
-                self._data = numpy.array(0, dtype=double)
+                self._data = numpy.array(0, dtype=numpy.float64)
         self._data.resize(dimSz*self._veclen)
 
         # read the first data
