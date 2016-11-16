@@ -9,5 +9,5 @@ or
 
 
 ## Author
-  YOSHIKAWA Hiroyuki, FUJITSU SYSTEMS EAST LTD.
+  YOSHIKAWA Hiroyuki, FUJITSU LTD.
 
