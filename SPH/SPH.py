@@ -1,16 +1,26 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-SPH File representation for Sphere framework
+SPH data representation for Sphere framework
 """
+from __future__ import print_function
 import sys
 import struct
 import numpy
 
 
 class SPH:
+    """
+    Representation of .sph file data
+    """
+
+    """ data type """
     (DT_SINGLE, DT_DOUBLE) = (1, 2)
+
     def __init__(self):
+        """
+        class initializer
+        """
         self._dims = [0, 0, 0]
         self._org = [0.0, 0.0, 0.0]
         self._pitch = [0.0, 0.0, 0.0]
@@ -18,13 +28,18 @@ class SPH:
         self._veclen = 1
         self._time = 0.0
         self._step = 0
-        self._min = {0.0}
-        self._max = {0.0}
+        self._min = [0.0]
+        self._max = [0.0]
         self._data = None
         self._path = None
         return
 
     def load(self, path):
+        """
+        load from .sph file
+         @param path: file path of the .sph file
+         @returns: True for succeed or False for failed.
+        """
         self._data = None
         self._path = None
 
@@ -32,7 +47,7 @@ class SPH:
         try:
             ifp = open(path, "rb")
         except:
-            print "open failed: %s" % path
+            print("SPH.load: open failed: %s" % path)
             return False
 
         # type record
@@ -159,6 +174,11 @@ class SPH:
         return True
 
     def save(self, path =None):
+        """
+        save to .sph file
+         @param path: file path of the .sph file. if None, use self._path
+         @returns: True for succeed or False for failed.
+        """
         if self._data == None: return False
         xpath = path
         if xpath == None: xpath = self._path
@@ -168,7 +188,7 @@ class SPH:
         try:
             ofp = open(xpath, "wb")
         except:
-            print "open failed: %s" % xpath
+            print("SPH.save: open failed: %s" % xpath)
             return False
 
         # attr record
@@ -234,4 +254,105 @@ class SPH:
 
         ofp.close()
         self._path = xpath
+        return True
+
+    def loadFromFort(self, path, dims, veclen=1, dtype=DT_SINGLE,
+                     org=(0.0,0.0,0.0), pitch=(1.0,1.0,1.0),
+                     tm=0.0, step=0, xcut=(0,0), ycut=(0,0), zcut=(0,0)):
+        """
+        load from FORTRAN Unformatted file
+         @param path: file path to read
+         @param dims: data array size (X, Y, Z)
+         @param veclen: vector length of each data(defalt=1)
+         @param dtype: data type(default=single precision)
+         @param org: corrdinate of the origin of the data(default=[0,0,0])
+         @param pitch: voxel pitch of each direction(default=[1,1,1])
+         @param tm: time of the data(default=0.0)
+         @param step: time step number of the data(default=0)
+         @param xcut: size of sleeve data to cut-off at the edge(left, right)
+         @param ycut:  default=(0, 0)
+         @param zcut:  param 'dims' must include sleeve size, and self._dims
+                       will be set to the size exclude sleeve.
+         @returns: True for succeed or False for failed.
+        """
+        self._data = None
+        self._path = None
+
+        # check dims, dtype
+        dimSz = 0
+        try:
+            dimSz = dims[0] * dims[1] * dims[2] * veclen
+        except:
+            print("SPH.loadFromFort: invalid dims or veclen specified.")
+            return False
+        if dtype == SPH.DT_SINGLE:
+            dsz = dimSz * 4
+            dds = "f"
+        elif dtype == SPH.DT_DOUBLE:
+            dsz = dimSz * 8
+            dds = "d"
+        else:
+            print("SPH.loadFromFort: invalid dtype specified.")
+            return False
+
+        # open file
+        try:
+            ifp = open(path, "rb")
+        except:
+            print("SPH.loadFromFort: open failed: %s" % path)
+            return False
+
+        # header
+        bo = '<'
+        header = ifp.read(4)
+        buff = struct.unpack(bo+'i', header)
+        if buff[0] != dsz:
+            bo = '>'
+            buff = struct.unpack(bo+'i', header)
+            if buff[0] != dsz:
+                print("SPH.loadFromFort: can not figure out byte-order"
+                      + " or specified invalid dims.")
+                return False
+
+        # read
+        ndt = numpy.dtype([("arr", bo + "%d"%dimSz + dds)])
+        try:
+            chunk = numpy.fromfile(ifp, dtype=ndt, count=1)
+        except:
+            print("SPH.loadFromFort: data read failed: %s" % path)
+            ifp.close()
+            return False
+        ifp.close()
+
+        arr = chunk[0]["arr"].reshape((dims[0], dims[1], dims[2], veclen),
+                                      order='F')
+
+        # setup myself
+        self._dims[:] = [dims[0]-xcut[0]-xcut[1],
+                         dims[1]-ycut[0]-ycut[1], dims[2]-zcut[0]-zcut[1]]
+        vdimSz = self._dims[0]*self._dims[1]*self._dims[2]
+        vdsz = vdimSz * veclen
+        self._data = arr[xcut[0]:-xcut[1], ycut[0]:-ycut[1],
+                         zcut[0]:-zcut[1], :].reshape((vdsz))
+        self._veclen = veclen
+        self._org[:] = org[:]
+        self._pitch[:] = pitch[:]
+        self._dtype = dtype
+        self._time = tm
+        self._step = step
+
+        # check min/max
+        self._min = [0.0]*veclen
+        self._max = [0.0]*veclen
+        for l in range(0, self._veclen):
+            self._min[l] = self._data[l]
+            self._max[l] = self._data[l]
+        for i in range(1, vdimSz):
+            for l in range(0, self._veclen):
+                val = self._data[i*self._veclen + l]
+                if self._min[l] > val:
+                    self._min[l] = val
+                elif self._max[l] < val:
+                    self._max[l] = val
+        # done
         return True
