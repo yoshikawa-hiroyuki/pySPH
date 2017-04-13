@@ -332,8 +332,8 @@ class SPH:
                          dims[1]-ycut[0]-ycut[1], dims[2]-zcut[0]-zcut[1]]
         vdimSz = self._dims[0]*self._dims[1]*self._dims[2]
         vdsz = vdimSz * veclen
-        self._data = arr[xcut[0]:-xcut[1], ycut[0]:-ycut[1],
-                         zcut[0]:-zcut[1], :].reshape((vdsz))
+        self._data = arr[xcut[0]:dims[0]-xcut[1], ycut[0]:dims[1]-ycut[1],
+                         zcut[0]:dims[2]-zcut[1], :].reshape((vdsz))
         self._veclen = veclen
         self._org[:] = org[:]
         self._pitch[:] = pitch[:]
