@@ -324,8 +324,8 @@ class SPH:
             return False
         ifp.close()
 
-        arr = chunk[0]["arr"].reshape((dims[0], dims[1], dims[2], veclen),
-                                      order='F')
+        arr = chunk[0]["arr"].reshape((veclen, dims[0], dims[1], dims[2]),
+                                      order='C')
 
         # setup myself
         self._dims[:] = [dims[0]-xcut[0]-xcut[1],
