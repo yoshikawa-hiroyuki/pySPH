@@ -199,31 +199,39 @@ class SPH:
 
         # size record
         if self._dtype == SPH.DT_DOUBLE:
-            ofp.write(struct.pack('i3qi', 24, self._dims[0], self._dims[1],
-                                  self._dims[2], 24))
+            ofp.write(struct.pack('i', 24))
+            ofp.write(struct.pack('3q',
+                                  self._dims[0], self._dims[1], self._dims[2]))
+            ofp.write(struct.pack('i', 24))
         else:
             ofp.write(struct.pack('5i', 12, self._dims[0], self._dims[1],
                                   self._dims[2], 12))
 
         # org record
         if self._dtype == SPH.DT_DOUBLE:
-            ofp.write(struct.pack('i3di', 24, self._org[0], self._org[1],
-                                  self._org[2], 24))
+            ofp.write(struct.pack('i', 24))
+            ofp.write(struct.pack('3d',
+                                  self._org[0], self._org[1], self._org[2]))
+            ofp.write(struct.pack('i', 24))
         else:
             ofp.write(struct.pack('i3fi', 12, self._org[0], self._org[1],
                                   self._org[2], 12))
 
         # pitch record
         if self._dtype == SPH.DT_DOUBLE:
-            ofp.write(struct.pack('i3di', 24, self._pitch[0], self._pitch[1],
-                                  self._pitch[2], 24))
+            ofp.write(struct.pack('i', 24))
+            ofp.write(struct.pack('3d', self._pitch[0],
+                                  self._pitch[1], self._pitch[2]))
+            ofp.write(struct.pack('i', 24))
         else:
             ofp.write(struct.pack('i3fi', 12, self._pitch[0], self._pitch[1],
                                   self._pitch[2], 12))
 
         # time record
         if self._dtype == SPH.DT_DOUBLE:
-            ofp.write(struct.pack('iqdi', 16, self._step, self._time, 16))
+            ofp.write(struct.pack('i', 16))
+            ofp.write(struct.pack('qd', self._step, self._time))
+            ofp.write(struct.pack('i', 16))
         else:
             ofp.write(struct.pack('iifi', 8, self._step, self._time, 8))
 
@@ -324,16 +332,17 @@ class SPH:
             return False
         ifp.close()
 
-        arr = chunk[0]["arr"].reshape((veclen, dims[0], dims[1], dims[2]),
+        arr = chunk[0]["arr"].reshape((dims[2], dims[1], dims[0], veclen),
                                       order='C')
 
         # setup myself
+        import pdb; pdb.set_trace()
         self._dims[:] = [dims[0]-xcut[0]-xcut[1],
                          dims[1]-ycut[0]-ycut[1], dims[2]-zcut[0]-zcut[1]]
         vdimSz = self._dims[0]*self._dims[1]*self._dims[2]
         vdsz = vdimSz * veclen
-        self._data = arr[xcut[0]:dims[0]-xcut[1], ycut[0]:dims[1]-ycut[1],
-                         zcut[0]:dims[2]-zcut[1], :].reshape((vdsz))
+        self._data = arr[zcut[0]:dims[2]-zcut[1], ycut[0]:dims[1]-ycut[1],
+                         xcut[0]:dims[0]-xcut[1], :].reshape((vdsz))
         self._veclen = veclen
         self._org[:] = org[:]
         self._pitch[:] = pitch[:]
