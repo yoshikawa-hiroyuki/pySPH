@@ -336,7 +336,6 @@ class SPH:
                                       order='C')
 
         # setup myself
-        import pdb; pdb.set_trace()
         self._dims[:] = [dims[0]-xcut[0]-xcut[1],
                          dims[1]-ycut[0]-ycut[1], dims[2]-zcut[0]-zcut[1]]
         vdimSz = self._dims[0]*self._dims[1]*self._dims[2]
