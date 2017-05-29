@@ -173,16 +173,20 @@ class SPH:
         self._path = path
         return True
 
-    def save(self, path =None):
+    def save(self, path =None, dtype =None):
         """
         save to .sph file
          @param path: file path of the .sph file. if None, use self._path
+         @param dtype: file dtype of the .sph file. if None, use self._dtype
          @returns: True for succeed or False for failed.
         """
         if self._data == None: return False
         xpath = path
         if xpath == None: xpath = self._path
         if xpath == None: return False
+        xtype = dtype
+        if xtype == None: xtype = self._dtype
+        if xtype == None: return False
 
         # open output file
         try:
@@ -190,6 +194,7 @@ class SPH:
         except:
             print("SPH.save: open failed: %s" % xpath)
             return False
+        self._dtype = xtype
 
         # attr record
         buff = [8, 1, 1, 8]
@@ -363,4 +368,50 @@ class SPH:
                 elif self._max[l] < val:
                     self._max[l] = val
         # done
+        return True
+
+    def saveToFort(self, path, dtype =None):
+        """
+        save to FORTRAN Unformatted file
+         @param path: file path to write
+         @param dtype: file dtype of the .sph file. if None, use self._dtype
+         @returns: True for succeed or False for failed.
+        """
+        xtype = dtype
+        if xtype == None: xtype = self._dtype
+        if xtype == None: return False
+
+        # open output file
+        try:
+            ofp = open(path, "wb")
+        except:
+            print("SPH.saveToFort: open failed: %s" % path)
+            return False
+        
+        # data record
+        dimSz = self._dims[0] * self._dims[1] * self._dims[2]
+        dimVX = self._veclen * self._dims[0]
+        k = 0
+        if xtype == SPH.DT_DOUBLE:
+            dfmt = '%dd' % dimVX
+            ofp.write(struct.pack('i', dimSz*self._veclen*8))
+            for i in range(self._dims[2]):
+                for j in range(self._dims[1]):
+                    ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
+                    k = k + dimVX
+                    continue # end of for(j)
+                continue # end of for(i)
+            ofp.write(struct.pack('i', dimSz*self._veclen*8))
+        else:
+            dfmt = '%df' % dimVX
+            ofp.write(struct.pack('i', dimSz*self._veclen*4))
+            for i in range(self._dims[2]):
+                for j in range(self._dims[1]):
+                    ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
+                    k = k + dimVX
+                    continue # end of for(j)
+                continue # end of for(i)
+            ofp.write(struct.pack('i', dimSz*self._veclen*4))
+
+        ofp.close()
         return True
