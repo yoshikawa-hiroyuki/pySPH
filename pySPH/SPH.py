@@ -370,11 +370,12 @@ class SPH:
         # done
         return True
 
-    def saveToFort(self, path, dtype =None):
+    def saveToFort(self, path, dtype =None, endian='@'):
         """
         save to FORTRAN Unformatted file
          @param path: file path to write
          @param dtype: file dtype of the .sph file. if None, use self._dtype
+         @param endian: BOM character according to 'struct' module
          @returns: True for succeed or False for failed.
         """
         xtype = dtype
@@ -393,25 +394,25 @@ class SPH:
         dimVX = self._veclen * self._dims[0]
         k = 0
         if xtype == SPH.DT_DOUBLE:
-            dfmt = '%dd' % dimVX
-            ofp.write(struct.pack('i', dimSz*self._veclen*8))
+            dfmt = endian + '%dd' % dimVX
+            ofp.write(struct.pack(endian+'i', dimSz*self._veclen*8))
             for i in range(self._dims[2]):
                 for j in range(self._dims[1]):
                     ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
                     k = k + dimVX
                     continue # end of for(j)
                 continue # end of for(i)
-            ofp.write(struct.pack('i', dimSz*self._veclen*8))
+            ofp.write(struct.pack(endian+'i', dimSz*self._veclen*8))
         else:
             dfmt = '%df' % dimVX
-            ofp.write(struct.pack('i', dimSz*self._veclen*4))
+            ofp.write(struct.pack(endian+'i', dimSz*self._veclen*4))
             for i in range(self._dims[2]):
                 for j in range(self._dims[1]):
                     ofp.write(struct.pack(dfmt, *self._data[k:k+dimVX]))
                     k = k + dimVX
                     continue # end of for(j)
                 continue # end of for(i)
-            ofp.write(struct.pack('i', dimSz*self._veclen*4))
+            ofp.write(struct.pack(endian+'i', dimSz*self._veclen*4))
 
         ofp.close()
         return True
