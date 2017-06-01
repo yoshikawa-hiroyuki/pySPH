@@ -84,31 +84,31 @@ class SPH:
         # size record
         if ( dType == 1 ):
             buff = struct.unpack(bo+'iiiii', ifp.read(20))
-            self._dims = (buff[1], buff[2], buff[3])
+            self._dims[:] = (buff[1], buff[2], buff[3])
         elif ( dType == 2 ):
             buff = struct.unpack(bo+'i', ifp.read(4))
             buff = struct.unpack(bo+'qqq', ifp.read(24))
-            self._dims = (buff[0], buff[1], buff[2])
+            self._dims[:] = (buff[0], buff[1], buff[2])
             buff = struct.unpack(bo+'i', ifp.read(4))
 
         # org record
         if ( dType == 1 ):
             buff = struct.unpack(bo+'ifffi', ifp.read(20))
-            self._org = (buff[1], buff[2], buff[3])
+            self._org[:] = (buff[1], buff[2], buff[3])
         elif ( dType == 2 ):
             buff = struct.unpack(bo+'i', ifp.read(4))
             buff = struct.unpack(bo+'ddd', ifp.read(24))
-            self._org = (buff[0], buff[1], buff[2])
+            self._org[:] = (buff[0], buff[1], buff[2])
             buff = struct.unpack(bo+'i', ifp.read(4))
 
         # pitch record
         if ( dType == 1 ):
             buff = struct.unpack(bo+'ifffi', ifp.read(20))
-            self._pitch = (buff[1], buff[2], buff[3])
+            self._pitch[:] = (buff[1], buff[2], buff[3])
         elif ( dType == 2 ):
             buff = struct.unpack(bo+'i', ifp.read(4))
             buff = struct.unpack(bo+'ddd', ifp.read(24))
-            self._pitch = (buff[0], buff[1], buff[2])
+            self._pitch[:] = (buff[0], buff[1], buff[2])
             buff = struct.unpack(bo+'i', ifp.read(4))
 
         # time record
@@ -180,13 +180,13 @@ class SPH:
          @param dtype: file dtype of the .sph file. if None, use self._dtype
          @returns: True for succeed or False for failed.
         """
-        if self._data == None: return False
+        if self._data is None: return False
         xpath = path
-        if xpath == None: xpath = self._path
-        if xpath == None: return False
+        if xpath is None: xpath = self._path
+        if xpath is None: return False
         xtype = dtype
-        if xtype == None: xtype = self._dtype
-        if xtype == None: return False
+        if xtype is None: xtype = self._dtype
+        if xtype is None: return False
 
         # open output file
         try:
@@ -379,8 +379,8 @@ class SPH:
          @returns: True for succeed or False for failed.
         """
         xtype = dtype
-        if xtype == None: xtype = self._dtype
-        if xtype == None: return False
+        if xtype is None: xtype = self._dtype
+        if xtype is None: return False
 
         # open output file
         try:
