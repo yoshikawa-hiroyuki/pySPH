@@ -21,6 +21,13 @@ class SPH:
         """
         class initializer
         """
+        self.reset()
+        return
+
+    def reset(self):
+        """
+        class identifier
+        """
         self._dims = [0, 0, 0]
         self._org = [0.0, 0.0, 0.0]
         self._pitch = [0.0, 0.0, 0.0]
@@ -416,3 +423,28 @@ class SPH:
 
         ofp.close()
         return True
+
+    def setNdarray(self, arr):
+        """
+        setup from numpy.ndarray
+         @param arr: numpy.ndarray
+         @returns: True for succeed or False for failed.
+        """
+        shp = arr.shape
+        if len(shp) < 1 or len(shp) > 3:
+            return False
+        shpSz = numpy.array(shp).prod()
+        if shpSz < 1:
+            return False
+        self.reset()
+
+        self._dims = [1, 1, 1]
+        for i in range(len(shp)):
+            self._dims[len(shp)-1-i] = shp[i]
+
+        self._pitch = [1.0, 1.0, 1.0]
+        self._data = arr.reshape((-1))
+        self._min[0] = self._data.min()
+        self._max[0] = self._data.max()
+        return True
+    
