@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(name="pySPH",
     version="0.1",
     description="Python interface for SPH file of Sphere framework",
-    requires=["numpy"],
+    requires=["numpy", "six"],
     author="YOSHIKAWA Hiroyuki, FUJITSU LTD.",
     author_email="yoh@jp.fujitsu.com",
     packages=["pySPH"],
