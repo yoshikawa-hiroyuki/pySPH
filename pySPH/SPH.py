@@ -41,6 +41,74 @@ class SPH:
         self._path = None
         return
 
+    @property
+    def dims(self):
+        return self._dims
+    @dims.setter
+    def dims(self, v:[int]):
+        self._dims[:] = v[:]
+
+    @property
+    def org(self):
+        return self._org
+    @org.setter
+    def org(self, v:[float]):
+        self._org[:] = v[:]
+
+    @property
+    def pitch(self):
+        return self._pitch
+    @pitch.setter
+    def pitch(self, v:[float]):
+        self._pitch[:] = v[:]
+
+    @property
+    def dtype(self):
+        return self._dtype
+    @dtype.setter
+    def dtype(self, v:int):
+        self._dtype = v
+
+    @property
+    def veclen(self):
+        return self._veclen
+    @veclen.setter
+    def veclen(self, v:int):
+        self._veclen = v
+
+    @property
+    def time(self):
+        return self._time
+    @time.setter
+    def time(self, v:float):
+        self._time = v
+
+    @property
+    def step(self):
+        return self._step
+    @step.setter
+    def step(self, v:int):
+        self._step = v
+
+    @property
+    def min(self):
+        return self._min
+
+    @property
+    def max(self):
+        return self._max
+
+    @property
+    def data(self):
+        return self._data
+
+    @property
+    def path(self):
+        return self._path
+    @path.setter
+    def path(self, v:str):
+        self._path = v
+
     def load(self, path):
         """
         load from .sph file
