@@ -1,1 +1,1 @@
-__all__ = ["SPH", ]
+__all__ = ["SPH", "filter", "isosurf" ]

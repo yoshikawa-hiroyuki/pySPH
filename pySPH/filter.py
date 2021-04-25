@@ -6,7 +6,7 @@ SPH_filter
 
 import sys, os
 import numpy as np
-import SPH
+from . import SPH
 
 import json
 import base64
