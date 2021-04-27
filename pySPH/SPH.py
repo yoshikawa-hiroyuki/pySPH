@@ -344,6 +344,17 @@ class SPH:
         self._path = xpath
         return True
 
+    def dataIndexed(self):
+        """
+        returns view of _data as multi-dim array
+        """
+        if self._veclen == 1:
+            return self._data.reshape([self._dims[2], self._dims[1], \
+                                       self._dims[0]])
+        else:
+            return self._data.reshape([self._dims[2], self._dims[1], \
+                                       self._dims[0], self._veclen])
+
     def loadFromFort(self, path, dims, veclen=1, dtype=DT_SINGLE,
                      org=(0.0,0.0,0.0), pitch=(1.0,1.0,1.0),
                      tm=0.0, step=0, xcut=(0,0), ycut=(0,0), zcut=(0,0)):
@@ -515,16 +526,3 @@ class SPH:
         self._min[0] = self._data.min()
         self._max[0] = self._data.max()
         return True
-    
-    def dataByIdx(self, idcs:[]) -> []:
-        if len(idcs) < 3:
-            return None
-        if self._veclen < 1:
-            return None
-        dims = self._dims
-        if dims[0] <= idcs[0] or dims[1] <= idcs[1] or dims[2] <= idcs[2]:
-            return None
-        rd = self._data[[(dims[0]*dims[1]*idcs[2] + dims[0]*idcs[1] + idcs[0])
-                         * self._veclen + i for i in range(self._veclen)]]
-        return rd
-    

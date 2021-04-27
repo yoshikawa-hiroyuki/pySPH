@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 from distutils.core import setup
 setup(name="pySPH",
-    version="0.1",
+    version="0.2",
     description="Python interface for SPH file of Sphere framework",
-    requires=["numpy", "six"],
+    requires=["numpy", "pybind11"],
     author="YOSHIKAWA Hiroyuki, FUJITSU LTD.",
-    author_email="yoh@jp.fujitsu.com",
+    author_email="yoh@fujitsu.com",
     packages=["pySPH"],
     )
 
