@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SPH vector filter
+SPH vector process filter
 """
 
 import sys, os
@@ -107,7 +107,7 @@ def vectorMag(d: SPH.SPH) -> SPH.SPH:
 def vectorCurl(d: SPH.SPH) -> SPH.SPH:
     ''' vectorCurl
     ベクトルデータを持つSPHからベクトルの回転をベクトルとして持つSPHを生成する
-    (C++で実装)
+    (C++実装)
 
     Parameters
     ----------
@@ -157,7 +157,7 @@ def vectorCurl(d: SPH.SPH) -> SPH.SPH:
 def vectorCurlPy(d: SPH.SPH) -> SPH.SPH:
     ''' vectorCurlPy
     ベクトルデータを持つSPHからベクトルの回転をベクトルとして持つSPHを生成する
-    (Pythonで実装)
+    (Python実装)
 
     Parameters
     ----------
@@ -277,3 +277,4 @@ def vectorCurlPy(d: SPH.SPH) -> SPH.SPH:
             continue # end of for(l)
         continue # end of for(i)
     return sph        
+
