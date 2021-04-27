@@ -1,11 +1,11 @@
 Metadata-Version: 1.1
 Name: pySPH
-Version: 0.1.3
+Version: 0.2.1
 Summary: Python interface for SPH file of Sphere framework
 Home-page: UNKNOWN
 Author: YOSHIKAWA Hiroyuki, FUJITSU LTD.
-Author-email: yoh@jp.fujitsu.com
+Author-email: yoh@fujitsu.com
 License: UNKNOWN
 Description: Python interface for SPH file of Sphere framework
 Platform: UNKNOWN
-Requires: numpy
+Requires: numpy, pybind11
