@@ -17,7 +17,7 @@ namespace py = pybind11;
 //  @return: curl vector of sph
 
 template <typename T>
-auto calc_curl(py::array_t<T> x, T px, T py, T pz) {
+py::array_t<T> calc_curl(py::array_t<T> x, T px, T py, T pz) {
   const auto &info = x.request(); // struct{}
   const auto &shape = info.shape; // std::vector<ssize_t>
   py::array_t<T> y{shape};
