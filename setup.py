@@ -7,7 +7,7 @@ include_dirs = [pybind11.get_include()]
 library_dirs = []
 
 ex_module = Extension(
-    'filter_exmod',
+    'pySPH.filter.filter_exmod',
     sources=['pySPH/filter/filter_exmod.cpp'],
     libraries=[],
     include_dirs=include_dirs,
