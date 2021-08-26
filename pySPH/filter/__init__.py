@@ -1,1 +1,1 @@
-__all__ = ['divide', 'json_encode', 'vecproc']
+__all__ = ['divide', 'json_encode', 'vecproc', 'scaproc']
