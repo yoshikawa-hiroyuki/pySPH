@@ -43,13 +43,13 @@ def asUchar(d: SPH.SPH, minMax:[]=None) -> np.ndarray:
     if dsz < 1:
         return None
     ucd = np.array([0], dtype='uint8')
-    ucd.resize(dsz)
+    ucd = np.resize(ucd, (dsz))
 
     for i in range(dsz):
-        ucd[i] = (d._data[i] - d_range[0]) / deno
+        ucd[i] = 255 * (d._data[i] - d_range[0]) / deno
         continue # end of for(i)
 
-    ucd.reshape([d._dims[2], d._dims[1], d._dims[0]])
+    ucd = np.reshape(ucd, [d._dims[2], d._dims[1], d._dims[0]])
     return ucd
 
 
