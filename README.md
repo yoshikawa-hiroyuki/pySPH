@@ -2,17 +2,15 @@
 Python interface for SPH file of [Sphere](http://vcad-hpsv.riken.jp/jp/release_software/V-Sphere) framework.
 
 ## Requires
-- Numpy
+- numpy
 - pybind11
+- wheel
+- setuptools
 - scikit-image (for isosurf)
 
 ## Install
 ```
-sudo python3 setup.py install
-```
-or
-```
-python3 setup.py install --user --prefix=
+pip3 install .
 ```
 
 ## Usage
