@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, sys
-from distutils.core import setup, Extension
+from setuptools import Extension, setup
 
 import pybind11
 include_dirs = [pybind11.get_include()]
